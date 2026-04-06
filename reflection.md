@@ -23,10 +23,22 @@
 
 ![UML Diagram](image-1.png)
 
+- Owner holds the user's info and their list of pets. It is the entry point — the Scheduler reads from it to   understand time constraints and preferences.
+- Pet represents an individual animal. It owns a list of Tasks and knows its own medications and details.
+- Task is a single care item with a type, duration, and priority. It knows its own state (complete or not) and can reschedule itself.
+- Scheduler is the brain. It takes all tasks from the Owner's pets and produces an ordered daily plan that fits within available time, noting why it made each decision.
+
 **b. Design changes**
 
-- Did your design change during implementation?
-- If yes, describe at least one change and why you made it.
+Several structural changes were made to the skeleton after design review:
+
+1. **Added `pet_name` field to `Task`** — the original design had no back-reference from a task to its pet. Once tasks are collected into a flat list (e.g. via `Owner.get_all_tasks()`), there was no way to tell which pet each task belonged to. Adding `pet_name` preserves that context for display and scheduling decisions.
+
+2. **Removed duplicate `available_time` and `tasks` from `Scheduler`** — the original skeleton stored copies of both in the `Scheduler`, separate from the `Owner`. If `Owner.set_availability()` was called after the `Scheduler` was created, the scheduler's copy would go stale. Replacing them with `@property` accessors that delegate directly to `owner` means there is a single source of truth.
+
+3. **Introduced a `Conflict` dataclass** — `check_conflicts()` originally returned `list[tuple]` with no documented structure. An untyped tuple forces the caller to guess what each position means. A `Conflict(task_a, task_b, reason)` dataclass makes the relationship explicit and easier to use in `generate_plan()` and in the UI.
+
+4. **Standardised `scheduled_time` format to `"HH:MM"`** — `is_overdue()` needs to compare times, but a plain unformatted string makes that impossible reliably. Documenting the expected format is the minimum needed before the method can be implemented correctly.
 
 ---
 
