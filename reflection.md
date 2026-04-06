@@ -1,11 +1,27 @@
 # PawPal+ Project Reflection
 
 ## 1. System Design
+**Core Actions**
+- Enter owner + pet info into system
+- Add/edit tasks
+- Generate a daily plan
+
+**Building Blocks**
+- Classes: Owner, Pet, Task, Scheduler
+***Attributes***
+- Pet: name, species, age, medications
+- Task: task_type, scheduled_time, is_complete
+- Owner: name, age, gender, height, weight
+- Scheduler: reference to owner, tasks, available_time, generated_plan, reasoning
+***Methods**
+- Pet: add_task(), get_tasks()
+- Scheduler: sort_tasks(), check_conflicts()
+- Task: mark_complete(), is_overdue(), reschedule(new_time), to_dict()
+- Owner: add_pet(pet), get_all_tasks(), set_availability(minutes), get_preferences()
 
 **a. Initial design**
 
-- Briefly describe your initial UML design.
-- What classes did you include, and what responsibilities did you assign to each?
+![UML Diagram](image-1.png)
 
 **b. Design changes**
 
