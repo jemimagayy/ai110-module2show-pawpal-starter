@@ -114,6 +114,7 @@ class Conflict:
 
 class Scheduler:
     def __init__(self, owner: Owner):
+        """Initialise the scheduler with an owner whose pets and time budget drive the plan."""
         self.owner: Owner = owner
         # available_time and tasks read directly from owner to avoid stale copies
         self.generated_plan: list[Task] = []
